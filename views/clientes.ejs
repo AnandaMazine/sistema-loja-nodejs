@@ -1,0 +1,33 @@
+<%- include ('partials/navbar.ejs') %> 
+<%- include ('partials/header.ejs') %>
+
+<div class="container">
+    <div class="card">
+        <div class="card-header">
+            <h1>Clientes</h1>
+        </div>
+        <div class="card-body">
+            <table class="table table-bordered table-hover">
+                <thead class="table-dark">
+                    <tr>
+                        <th>Nome:</th>
+                        <th>CPF:</th>
+                        <th>Endereço:</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Chamando o Array de objetos -->
+                    <% clientes.forEach(cliente => { %>
+                    <tr>
+                    <td><%= cliente.nome %></td>
+                    <td><%= cliente.CPF %></td>
+                    <td><%= cliente.endereco %></td>
+                    </tr>
+                    <% }) %>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<%- include ('partials/footer.ejs') %>
