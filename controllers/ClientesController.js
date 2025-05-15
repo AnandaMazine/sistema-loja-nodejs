@@ -1,18 +1,67 @@
 import express from "express";
-
+import Cliente from "../models/Cliente.js";
 const router = express.Router();
 
 router.get("/clientes", function(req, res){
-    const clientes = [
-        {nome: "João", CPF: "123.456.789-00", endereco: "Rua dos Bobos, 0"},
-        {nome: "Ana", CPF: "001.234.567-89", endereco: "Rua Um, 2"},
-        {nome: "Maria", CPF: "112.345.678.90", endereco: "Rua Dois, 3"},
-        {nome: "José", CPF: "234.567.890-11", endereco: "Rua Tres, 4"},
-        {nome: "Carlos", CPF: "345.678.110-99", endereco: "Rua Quatro, 4"},
-    ]
-    res.render("clientes", {
-        clientes: clientes,
+    Cliente.findAll().then((clientes) => {
+      res.render("clientes", {
+      clientes: clientes,
       });
     });
+});
+    
+router.post("/clientes/new", (req, res) =>{
+  const id = req.body.id;
+  const nome = req.body.nome;
+  const cpf = req.body.cpf;
+  const endereco = req.body.endereco;
+  Cliente.create({
+    id: id,
+    nome: nome,
+    cpf: cpf,
+    endereco: endereco,
+  }).then(() => {
+    res.redirect("/clientes");
+  });
+});
+
+router.get("/clientes/delete/:id", (req, res) => {
+  const id = req.params.id;
+  Cliente.destroy({
+    where:{
+      id:id,
+    },
+  }).then(() => {
+    res.redirect("/clientes");
+  }).catch((error) => {
+    console.log(error);
+  });
+});
+
+router.get("/clientes/edit/:id", (req, res) => {
+  const id = req.params.id;
+  Cliente.findByPk(id).then(function (cliente) {
+    res.render("clienteEdit", {
+      cliente: cliente,
+    });
+  });
+});
+
+router.post("/clientes/update/:id", (req, res) => {
+  const id = req.body.id;
+  const nome = req.body.nome;
+  const cpf = req.body.cpf;
+  const endereco = req.body.endereco;
+  Cliente.update (
+    {
+    nome: nome,
+    cpf: cpf,
+    endereco: endereco,
+  },
+  { where: { id:id}}
+  ). then (() => {
+    res.redirect("/clientes");
+  });
+});
   
-    export default router;
+export default router;
